@@ -3,5 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/git" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/git/Dcloud-Andriod" vcs="Git" />
   </component>
 </project>

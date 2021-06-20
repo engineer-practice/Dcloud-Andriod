@@ -4,6 +4,7 @@ package com.example.daoyun09.http;
 import android.support.annotation.NonNull;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.daoyun09.dto.CourseDto;
 import com.example.daoyun09.entity.ServerResponse;
 import com.example.daoyun09.entity.User;
 import com.example.daoyun09.entity.loginByPasswordVo;
@@ -238,6 +239,24 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
+    public static void hascreateCourse(String tel, BaseObserver<JSONObject> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httphasCreatedCourseInterface(tel)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void hasJoinCourse(String tel, BaseObserver<JSONObject> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httphasJoinCourseInterface(tel)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
     public static void getCourseInfo(String token, String course_id, BaseObserver<CourseInfoBean> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
@@ -310,12 +329,21 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
-//    public static void createCourse(String className, String examination, int isSchoolLesson, String name, String process,
-//                                    String require, String school, String telephone, String term, BaseObserver<String> callback) {
-   public static void createCourse(JSONObject params, BaseObserver<String> callback) {
+    //加入班课
+    public static void JoinCourse(String code, String telephone,BaseObserver<String> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpCreateCourseInterface(params)
+        service.httpJoinCourseInterface(code,telephone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void createCourse(String className, String examination, int isSchoolLesson, String name, String process,
+                                    String require, String school, String telephone,String term, BaseObserver<String> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpCreateCourseInterface(className,examination,isSchoolLesson,name,process,require,school,telephone,term)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);

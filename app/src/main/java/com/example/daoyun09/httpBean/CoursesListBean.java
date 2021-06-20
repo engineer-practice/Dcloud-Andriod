@@ -12,16 +12,16 @@ public class CoursesListBean extends DefaultResultBean<List<CoursesListBean>> {
      * time : 12414134
      */
 
-    private int course_id;
+    private String course_id;
     private String course_name;
     private String teacher;
     private String time;
 
-    public int getCourse_id() {
+    public String getCourse_id() {
         return course_id;
     }
 
-    public void setCourse_id(int course_id) {
+    public void setCourse_id(String course_id) {
         this.course_id = course_id;
     }
 

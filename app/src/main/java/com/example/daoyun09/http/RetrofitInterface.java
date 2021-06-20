@@ -1,6 +1,7 @@
 package com.example.daoyun09.http;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.daoyun09.dto.CourseDto;
 import com.example.daoyun09.entity.ServerResponse;
 import com.example.daoyun09.entity.User;
 import com.example.daoyun09.entity.loginByPasswordVo;
@@ -143,6 +144,12 @@ public interface RetrofitInterface {
     @GET("course/search")
     Observable<SearchListBean> httpSearchCourseInterface(@QueryMap Map<String, String> params);
 
+    @GET("courses/hasCreated")
+    Observable<JSONObject> httphasCreatedCourseInterface(@Query("telephone") String telephone);
+
+    @GET("courses/hasJoined")
+    Observable<JSONObject> httphasJoinCourseInterface(@Query("telephone") String telephone);
+
     /**
      * 获取课程信息
      *
@@ -222,14 +229,17 @@ public interface RetrofitInterface {
     @GET("course/course")
     Observable<CoursesListBean> httpGetCoursesListInterface(@QueryMap Map<String, String> params);
 
+    @Multipart
+    @POST("courses")
+    Observable<String> httpJoinCourseInterface(@Part("code") String code, @Part("telephone") String telephone);
+
     /**
      * 创建课程
      */
     @Multipart
     @POST("courses/CreateClass")
-    Observable<String> httpCreateCourseInterface(@PartMap JSONObject params);
-//    Observable<String> httpCreateCourseInterface(@Part("className") String className, @Part("examination") String examination, @Part("isSchoolLesson") int isSchoolLesson, @Part("name") String name,
-//                                                 @Part("process") String process, @Part("require") String require, @Part("school") String school, @Part("telephone") String telephone, @Part("term") String term);
+    Observable<String> httpCreateCourseInterface(@Part("className") String className, @Part("examination") String examination, @Part("isSchoolLesson") int isSchoolLesson, @Part("name") String name,
+                                                 @Part("process") String process, @Part("require") String require, @Part("school") String school, @Part("telephone") String telephone, @Part("term") String term);
 
     /**
      * 签到

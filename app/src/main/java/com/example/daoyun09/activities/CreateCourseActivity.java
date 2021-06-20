@@ -1,6 +1,7 @@
 package com.example.daoyun09.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.daoyun09.dto.CourseDto;
 import com.example.daoyun09.httpBean.DefaultResultBean;
 import com.example.daoyun09.R;
 import com.example.daoyun09.http.BaseObserver;
@@ -39,8 +41,8 @@ public class CreateCourseActivity extends AppCompatActivity {
     EditText term;
     @BindView(R.id.course_loc)
     EditText courseLoc;
-    @BindView(R.id.course_teacher)
-    EditText courseTeacher;
+//    @BindView(R.id.course_teacher)
+//    EditText courseTeacher;
     @BindView(R.id.course_tel)
     EditText tel;
     @BindView(R.id.loading_button)
@@ -56,30 +58,24 @@ public class CreateCourseActivity extends AppCompatActivity {
 
     private void initView() {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        courseTeacher.setText(SessionKeeper.getUserInfo(this).getName());
+        term.setText("2020-2021-2");
+        //courseTeacher.setText(SessionKeeper.getUserInfo(this).getName());
     }
 
     @OnClick(R.id.loading_button)
     public void onViewClicked() {
         loadingButton.setClickable(false);
         loadingButton.setText("提交中...");
-        //Map<String, String> params = new HashMap<>();
-        JSONObject params=new JSONObject();
-        params.put("className", className.getText().toString());
-        params.put("examination", "");
-        params.put("isSchoolLesson", "");
-//        params.put("location", GPSUtils.getInstance(this).getLocationString());
-        params.put("name", courseName.getText().toString());
-        params.put("require", courseTeacher.getText().toString());
-        params.put("school", "");
-        params.put("telephone", tel.getText().toString());
-        params.put("term", term.getText().toString());
-//        HttpUtil.createCourse(className.getText().toString(),"s",0, courseName.getText().toString(),"s",
-//                courseTeacher.getText().toString(),"s",tel.getText().toString(),term.getText().toString(),new BaseObserver<String>() {
-          HttpUtil.createCourse(params,new BaseObserver<String>() {
+
+        HttpUtil.createCourse(className.getText().toString(),"s",0, courseName.getText().toString(),"s",
+                "s","s",tel.getText().toString(),term.getText().toString(),new BaseObserver<String>() {
+          //HttpUtil.createCourse(cd,new BaseObserver<String>() {
             @Override
             protected void onSuccess(String number) {
-                ToastUtil.showMessage(CreateCourseActivity.this, number, ToastUtil.LENGTH_LONG);
+                ToastUtil.showMessage(getApplicationContext(), "创建成果："+number, ToastUtil.LENGTH_LONG);
+                Intent intent=new Intent(CreateCourseActivity.this,QRCode.class);
+                intent.putExtra("qrNum", number);//参数：num、value
+                CreateCourseActivity.this.startActivity(intent);
 //                if (objectDefaultResultBean.getResult_code().equals("200")) {
 //                    mHandler.sendEmptyMessage(WHAT_CREATE_SUCCESS);
 //                } else {

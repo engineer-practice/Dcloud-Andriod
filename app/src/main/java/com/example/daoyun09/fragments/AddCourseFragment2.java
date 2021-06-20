@@ -26,15 +26,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.alibaba.fastjson.JSONObject;
-import com.example.daoyun09.httpBean.DefaultResultBean;
-import com.example.daoyun09.httpBean.SearchListBean;
 import com.example.daoyun09.R;
 import com.example.daoyun09.activities.CourseInfoActivity;
 import com.example.daoyun09.activities.CreateCourseActivity;
 import com.example.daoyun09.adapters.SearchListAdapter;
 import com.example.daoyun09.http.BaseObserver;
 import com.example.daoyun09.http.HttpUtil;
+import com.example.daoyun09.httpBean.DefaultResultBean;
+import com.example.daoyun09.httpBean.SearchListBean;
 import com.example.daoyun09.session.SessionKeeper;
 import com.example.daoyun09.utils.LogUtil;
 import com.example.daoyun09.utils.ToastUtil;
@@ -54,13 +53,13 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddCourseFragment extends Fragment implements SearchListAdapter.OnListListener, SearchView.OnQueryTextListener {
+public class AddCourseFragment2 extends Fragment implements SearchListAdapter.OnListListener, SearchView.OnQueryTextListener {
     private static final int WHAT_GET_DATA_SUCCESS = 1;
     private static final int WHAT_GET_DATA_FAILED = 2;
     private static final int WHAT_ADD_COURSE_FAILED = 3;
     private static final int WHAT_ADD_COURSE_SUCCESS = 4;
-//    @BindView(R.id.search_view)
-//    SearchView searchView;
+    @BindView(R.id.search_view)
+    SearchView searchView;
     Unbinder unbinder;
 
     String searchString = "";
@@ -102,40 +101,6 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
             goScan();
         }
     }
-
-    @OnClick(R.id.join)
-    public void onJoin()
-    {
-        HttpUtil.JoinCourse(classId.getText().toString(),"18760372609", new BaseObserver<String>() {
-            @Override
-            protected void onSuccess(String data) {
-                loadingAppendData = false;
-                JSONObject res =JSONObject.parseObject(data);
-                if(res.getString("respCode").trim().equals("1"))
-                {
-                    ToastUtil.showMessage(getActivity(), "加入班课成功", ToastUtil.LENGTH_LONG);
-                }
-                else
-                {
-                    ToastUtil.showMessage(getActivity(), "班课不存在，请重新输入", ToastUtil.LENGTH_LONG);
-                }
-
-            }
-
-            @Override
-            protected void onFailure(Throwable e, boolean isNetWorkError) {
-                loadingAppendData = false;
-                mHandler.sendEmptyMessage(WHAT_GET_DATA_FAILED);
-                if (isNetWorkError)
-                    ToastUtil.showMessage(getActivity(), "网络出错，请检查网络", ToastUtil.LENGTH_LONG);
-                else
-                    ToastUtil.showMessage(getActivity(), e.getMessage(), ToastUtil.LENGTH_LONG);
-
-            }
-        });
-    }
-
-
     /**
      * 跳转到扫码界面扫码
      */
@@ -165,15 +130,14 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
             if (data != null) {
                 //返回的文本内容
                 content = data.getStringExtra(DECODED_CONTENT_KEY);
-                classId.setText(content);
                 //返回的BitMap图像
                 Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
-                //ToastUtil.showMessage(getActivity(),content, ToastUtil.LENGTH_LONG);
+                ToastUtil.showMessage(getActivity(),content, ToastUtil.LENGTH_LONG);
 //                searchView.setQuery(content,false);
             }
         }
     }
-    public AddCourseFragment() {
+    public AddCourseFragment2() {
         // Required empty public constructor
     }
     @Override
@@ -191,9 +155,9 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
     private void initView() {
         if (SessionKeeper.getUserType(getActivity()).equals("3"))
             fab.setVisibility(View.GONE);
-//        searchView.onActionViewExpanded();
-//        searchView.setIconifiedByDefault(false);
-//        searchView.setOnQueryTextListener(this);
+        searchView.onActionViewExpanded();
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(this);
         refreshView.setOnRefreshListener(this::refreshData);
         refreshView.setColorSchemeColors(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
         mAdapter = new SearchListAdapter(data, getActivity(), SessionKeeper.getUserType(getActivity()), this);
@@ -403,11 +367,11 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
             View view = Objects.requireNonNull(getActivity()).getCurrentFocus();
             if (view != null) {
                 view.clearFocus();
-                //searchView.clearFocus();
+                searchView.clearFocus();
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
-            //searchView.clearFocus();
+            searchView.clearFocus();
         }
         focus.setFocusable(true);
         focus.setFocusableInTouchMode(true);

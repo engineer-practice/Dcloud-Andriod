@@ -37,6 +37,7 @@
         <activity android:name="com.example.daoyun09.activities.ChangePasswordActivity" />
         <activity android:name="com.example.daoyun09.activities.tmpMainActivity"/>
         <activity android:name="com.example.daoyun09.activities.FastRegisiterActivity"></activity>
+        <activity android:name="com.example.daoyun09.activities.QRCode"></activity>
         <activity
             android:name="com.example.daoyun09.activities.RegisterActivity"
             android:theme="@style/Translucent" />

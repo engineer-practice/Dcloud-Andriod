@@ -44,7 +44,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         }
         holder.courseNameTV.setText("课程名称："+bean.getCourse_name());
         holder.courseTeacherTV.setText("任课教师："+bean.getTeacher());
-        holder.courseTimeTV.setText("时间："+bean.getTime());
+        holder.courseTimeTV.setText("班级："+bean.getTime());
     }
 
     @Override

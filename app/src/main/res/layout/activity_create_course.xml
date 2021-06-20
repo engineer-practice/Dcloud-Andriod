@@ -64,6 +64,33 @@
         </android.support.design.widget.TextInputLayout>
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="选择班课学校院系"
+            android:textColor="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/school" />
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/department" />
+        </LinearLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,24 +138,6 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="任课教师"
-            android:theme="@style/TextLabel_Primary">
-
-            <EditText
-                android:id="@+id/course_teacher"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_edit"
-                android:inputType="text"
-                android:paddingBottom="2dp"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@drawable/bg_input_cursor"
-                android:textSize="@dimen/input_text_size" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:theme="@style/TextLabel_Primary">
 
             <EditText
@@ -144,12 +153,6 @@
                 android:textSize="@dimen/input_text_size" />
         </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="课程创建后会对此时所在地点进行定位"
-            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
     <Button

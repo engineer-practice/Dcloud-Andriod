@@ -29,4 +29,24 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <string-array name="school">
+        <item>--选择学校--</item>
+        <item>厦门大学</item>
+        <item>福州大学</item>
+        <item>福建师范大学</item>
+        <item>福建农林大学</item>
+    </string-array>
+
+    <string-array name="department">
+        <item>--选择院系--</item>
+        <item>数学与计算机科学学院</item>
+        <item>物理与信息工程学院</item>
+        <item>机械工程及自动化学院</item>
+        <item>电气工程与自动化学院</item>
+        <item>人文社会科学学院</item>
+        <item>外国语学院</item>
+        <item>紫金矿业学院</item>
+    </string-array>
+
+
 </resources>

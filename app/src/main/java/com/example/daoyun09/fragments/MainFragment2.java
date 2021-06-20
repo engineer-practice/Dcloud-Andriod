@@ -17,10 +17,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.daoyun09.R;
 import com.example.daoyun09.activities.CourseInfoActivity;
 import com.example.daoyun09.activities.LoginActivity;
 import com.example.daoyun09.adapters.CoursesListAdapter;
+import com.example.daoyun09.http.BaseObserver;
+import com.example.daoyun09.http.HttpUtil;
 import com.example.daoyun09.httpBean.CoursesListBean;
 import com.example.daoyun09.session.SessionKeeper;
 import com.example.daoyun09.utils.ToastUtil;
@@ -56,6 +60,7 @@ public class MainFragment2 extends Fragment {
 
     private String mParam1;
     private String mParam2;
+    private int size;
 
     Unbinder unbinder;
     CoursesListAdapter mAdapter;
@@ -104,41 +109,34 @@ public class MainFragment2 extends Fragment {
     private void getData() {
         mRefreshCourseList.setRefreshing(true);
         data.clear();
-        Map<String, String> params = new HashMap<>();
-        params.put("token", SessionKeeper.getToken(getActivity()));
-        params.put("uid", String.valueOf(SessionKeeper.getUserId(getActivity())));
-        params.put("type", String.valueOf(SessionKeeper.getUserType(getActivity())));
-//        HttpUtil.getCoursesList(params, new BaseObserver<CoursesListBean>() {
-//            @Override
-//            protected void onSuccess(CoursesListBean coursesListBean) {
-//                if (coursesListBean.getResult_code().equals("200")) {
-//                    data.addAll(coursesListBean.getData());
-//                    mHandler.sendEmptyMessage(WHAT_GET_DATA_SUCCESS);
-//                    LogUtil.d("加载课程列表", "加载成功", LogUtil.LOG_DEBUG);
-//                } else {
-//                    ToastUtil.showMessage(getActivity(), coursesListBean.getResult_desc(), ToastUtil.LENGTH_LONG);
-//                    mHandler.sendEmptyMessage(WHAT_GET_DATA_FAILED);
-//                }
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable e, boolean isNetWorkError) {
-//                mHandler.sendEmptyMessage(WHAT_GET_DATA_FAILED);
-//                if (isNetWorkError)
-//                    ToastUtil.showMessage(getActivity(), "网络错误", ToastUtil.LENGTH_LONG);
-//                else
-//                    ToastUtil.showMessage(getActivity(), e.getMessage(), ToastUtil.LENGTH_LONG);
-//            }
-//        });
-        CoursesListBean c1 =new CoursesListBean();
-        c1.setCourse_id(1);c1.setCourse_name("c/c++程序设计");
-        c1.setTeacher("池芝标");c1.setTime("2020-2");
-        data.add(c1);
-        CoursesListBean c2 =new CoursesListBean();
-        c2.setCourse_id(1);c2.setCourse_name("算法设计与分析");
-        c2.setTeacher("仙咏");c2.setTime("2020-2");
-        data.add(c2);
-        mHandler.sendEmptyMessage(WHAT_GET_DATA_SUCCESS);
+
+        HttpUtil.hasJoinCourse("18760372609", new BaseObserver<JSONObject>() {
+            @Override
+            protected void onSuccess(JSONObject res) {
+                size=res.getIntValue("total");
+                JSONArray info = res.getJSONArray("dataList");
+                for(int i=0;i<size;i++)
+                {
+                    JSONObject tmp = info.getJSONObject(i);
+                    CoursesListBean c =new CoursesListBean();
+                    c.setCourse_id(tmp.getString("code"));
+                    c.setCourse_name(tmp.getString("name"));
+                    c.setTeacher(tmp.getString("teacherName"));
+                    c.setTime("2020-2");
+                    data.add(c);
+                }
+                mHandler.sendEmptyMessage(WHAT_GET_DATA_SUCCESS);
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                if (isNetWorkError)
+                    ToastUtil.showMessage(getActivity(), "网络出错，请检查网络", ToastUtil.LENGTH_LONG);
+                else
+                    ToastUtil.showMessage(getActivity(), e.getMessage(), ToastUtil.LENGTH_LONG);
+
+            }
+        });
     }
 
     private void initView() {
