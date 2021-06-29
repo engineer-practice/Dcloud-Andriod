@@ -63,9 +63,9 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
 
     static
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.course_name_TV)
+        @BindView(R.id.stu_name_TV)
         TextView courseNameTV;
-        @BindView(R.id.course_teacher_TV)
+        @BindView(R.id.stu_sno_TV)
         TextView courseTeacherTV;
         @BindView(R.id.course_time_TV)
         TextView courseTimeTV;

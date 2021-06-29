@@ -6,24 +6,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.daoyun09.httpBean.StudentsListBean;
 import com.example.daoyun09.R;
+import com.example.daoyun09.httpBean.StudentsListBean;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.ViewHolder> {
+public class StudentListAdapter2 extends RecyclerView.Adapter<StudentListAdapter2.ViewHolder> {
 
     private List<StudentsListBean> data;
     private Context context;
 
-    public StudentListAdapter(List<StudentsListBean> data, Context context) {
+    public StudentListAdapter2(List<StudentsListBean> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -32,7 +31,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater mInflater = LayoutInflater.from(context);
-        View v = mInflater.inflate(R.layout.student_list_item2, viewGroup, false);
+        View v = mInflater.inflate(R.layout.student_list_item1, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -41,7 +40,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         StudentsListBean stu = data.get(i);
         viewHolder.studentName.setText(stu.getName());
         viewHolder.studentSno.setText(stu.getStu_code());
-        viewHolder.studentCheck.setText("经验值: "+stu.getCheck_count());
+        viewHolder.studentCheck.setText(stu.getCheck_count());
     }
 
     @Override

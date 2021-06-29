@@ -32,7 +32,7 @@
             android:theme="@style/TextLabel_Primary">
 
             <EditText
-                android:id="@+id/course_name"
+                android:id="@+id/bigTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_bg_edit"
@@ -77,18 +77,16 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/spinner_school"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/school" />
+                android:layout_weight="1" />
 
             <Spinner
-                android:id="@+id/spinner2"
+                android:id="@+id/spinner_depart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/department" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -134,24 +132,6 @@
             android:layout_marginTop="8dp"
             android:text="输入具体的上课地点，如：东3-100"
             android:textColor="@color/colorPrimary" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel_Primary">
-
-            <EditText
-                android:id="@+id/course_tel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_edit"
-                android:hint="联系电话"
-                android:inputType="text"
-                android:paddingBottom="2dp"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@drawable/bg_input_cursor"
-                android:textSize="@dimen/input_text_size" />
-        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 

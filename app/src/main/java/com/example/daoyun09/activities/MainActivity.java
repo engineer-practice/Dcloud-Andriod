@@ -19,16 +19,23 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.daoyun09.R;
 import com.example.daoyun09.fragments.AddCourseFragment;
 import com.example.daoyun09.fragments.MainFragment;
 import com.example.daoyun09.fragments.MyInfoFragment;
 import com.example.daoyun09.fragments.tmpUserFragment;
+import com.example.daoyun09.http.BaseObserver;
+import com.example.daoyun09.http.HttpUtil;
+import com.example.daoyun09.httpBean.LoginBean;
+import com.example.daoyun09.session.SessionKeeper;
+import com.example.daoyun09.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.example.daoyun09.utils.Util.md5;
 
 public class MainActivity extends AppCompatActivity {
     static final String[] LOCATIONGPS = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -55,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //showGPSContacts();
+        showGPSContacts(); //打开GPS
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mFragmentManager = getSupportFragmentManager();
         startFragment();
@@ -96,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+
 
     public void startFragment(){
         mFragmentManager.beginTransaction().replace(frameLayout.getId(),mMainFragment).commit();

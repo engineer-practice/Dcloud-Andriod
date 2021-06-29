@@ -22,53 +22,60 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:orientation="vertical"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/course_name"
-                android:layout_width="wrap_content"
+                android:id="@+id/bigTime"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_L" />
 
             <TextView
                 android:id="@+id/teacher_name"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_L" />
 
             <TextView
                 android:id="@+id/course_code"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_L" />
 
             <TextView
                 android:id="@+id/place"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_L" />
 
             <TextView
                 android:id="@+id/stu_count"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_L" />
 
-            <TextView
-                android:id="@+id/sign_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_L" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/text_use_web"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="如需进行管理请到网页版到云"
-                android:textSize="@dimen/text_S" />
+                <TextView
+                    android:id="@+id/isJoin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是否允许加入班课"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_L" />
+
+                <CheckBox
+                    android:id="@+id/Join_checkBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -84,6 +91,7 @@
             android:background="@drawable/bt_shape"
             android:textColor="@color/colorPrimary"
             />
+
         <Button
             android:id="@+id/stop_check"
             android:layout_width="wrap_content"
@@ -91,23 +99,26 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="130dp"
             android:layout_marginEnd="16dp"
-            android:text="停止签到"
-            android:stateListAnimator="@drawable/state_list_animator_z"
             android:background="@drawable/bt_shape"
+            android:stateListAnimator="@drawable/state_list_animator_z"
+            android:text="班课管理"
             android:textColor="@color/colorPrimary"
-            android:visibility="gone"
-            />
+            android:visibility="visible" />
 
 
     </RelativeLayout>
 
-    <View
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_students_list"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/black" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycle_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/atten_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="475dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>

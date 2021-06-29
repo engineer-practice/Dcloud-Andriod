@@ -137,10 +137,10 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
-    public static void forgotPwd(Map<String, String> params, BaseObserver<DefaultResultBean<Object>> callback) {
+    public static void updatePwd(String newPassword,String oldPassword,String repeatNewPassword,String telephone, BaseObserver<String> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpForgotPwdInterface(params)
+        service.httpupdatePwdInterface(newPassword,oldPassword,repeatNewPassword,telephone)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
@@ -150,6 +150,15 @@ public class HttpUtil extends HttpBase {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
         service.httpGetUserInfoInterface(account)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void getHistoryInfo(String code, BaseObserver<JSONObject> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpGetHistoryInterface(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
@@ -169,6 +178,27 @@ public class HttpUtil extends HttpBase {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
         service.httpSendTelCodeInterface(tel)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    //修改个人信息
+    public static void UpdateUserInfo(String SchoolCode,String birth,String image,String name, String nickname,
+                                      int role_id,int sex,String sno,String telephone, BaseObserver<String> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpUpdateUserInfoInterface(SchoolCode,birth,image,name, nickname,role_id, sex,sno,telephone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    //获取学校院系
+    public static void getSchoolInfo(String code, BaseObserver<JSONObject> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpGetSchoolInfoInterface(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
@@ -221,10 +251,10 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
-    public static void getStudentsList(String token, String course_id, BaseObserver<StudentsListBean> callback) {
+    public static void getStudentsList(String course_id, BaseObserver<JSONObject> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpGetStudentsListInterface(token, course_id)
+        service.httpGetStudentsListInterface(course_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
@@ -257,10 +287,28 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
-    public static void getCourseInfo(String token, String course_id, BaseObserver<CourseInfoBean> callback) {
+    public static void getSchools(BaseObserver<JSONObject> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpGetCourseInfoInterface(token, course_id)
+        service.httphschoolsInterface()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void getDepartment(String code,BaseObserver<JSONObject> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httphgetDepartmentInterface(code)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void getCourseInfo(String course_id, BaseObserver<JSONObject> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpGetCourseInfoInterface(course_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
@@ -339,11 +387,41 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
-    public static void createCourse(String className, String examination, int isSchoolLesson, String name, String process,
+    //老师删除班课
+    public static void Teacher_delCourse(String code, BaseObserver<String> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpTeacher_delCourseInterface(code)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    //学生退出班课
+    public static void Stu_delCourse(String code, String telephone,BaseObserver<String> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpStu_delCourseInterface(code,telephone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void createCourse(String className, String examination, int isFinish, String name, String process,
                                     String require, String school, String telephone,String term, BaseObserver<String> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpCreateCourseInterface(className,examination,isSchoolLesson,name,process,require,school,telephone,term)
+        service.httpCreateCourseInterface(className,examination,isFinish,name,process,require,school,telephone,term)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
+    }
+
+    public static void updateCourse(String className, String code,String examination, int isFinish,int isJoin, String name, String process,
+                                    String require, String school,String term, BaseObserver<String> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpUpdateCourseInterface(className,code,examination,isFinish,isJoin,name,process,require,school,term)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
@@ -353,13 +431,23 @@ public class HttpUtil extends HttpBase {
      * 签到模块  <=============================================================================>
      */
 
-    public static void check(Map<String, String> params, BaseObserver<DefaultResultBean<Boolean>> callback) {
+    public static void check(int attendance_type,String code, int count, String end_time, double latitude, double longitude,
+                             String start_time, String telephone, BaseObserver<Integer> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpCheckInterface(params)
+        service.httpCheckInterface(attendance_type,code, count, end_time,latitude, longitude, start_time,telephone)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(callback);
+    }
+
+    public static void stuCheck(String attend_time,String code, double latitude, double longitude, String telephone, BaseObserver<String> callback) {
+        Retrofit retrofit = init();
+        RetrofitInterface service = retrofit.create(RetrofitInterface.class);
+        service.httpStu_CheckInterface(attend_time,code,latitude, longitude,telephone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback);
     }
 
     public static void startCheck(Map<String, String> params, BaseObserver<DefaultResultBean<Object>> callback) {
@@ -371,19 +459,19 @@ public class HttpUtil extends HttpBase {
                 .subscribe(callback);
     }
 
-    public static void stopCheck(Map<String, String> params, BaseObserver<DefaultResultBean<Object>> callback) {
+    public static void stopCheck(String code, BaseObserver<String> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpStopCheckInterface(params)
+        service.httpStopCheckInterface(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
     }
 
-    public static void canCheck(Map<String, String> params, BaseObserver<DefaultResultBean<Boolean>> callback) {
+    public static void canCheck(String code, BaseObserver<String> callback) {
         Retrofit retrofit = init();
         RetrofitInterface service = retrofit.create(RetrofitInterface.class);
-        service.httpCanCheckInterface(params)
+        service.httpCanCheckInterface(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);

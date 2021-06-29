@@ -5,6 +5,7 @@ import android.accounts.NetworkErrorException;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.util.concurrent.TimeoutException;
 
 import io.reactivex.Observer;
@@ -53,7 +54,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
      * @param t
      * @throws Exception
      */
-    protected abstract void onSuccess(T t);
+    protected abstract void onSuccess(T t) throws ParseException;
 
     /**
      * 返回失败

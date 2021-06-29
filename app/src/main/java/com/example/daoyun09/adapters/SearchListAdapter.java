@@ -22,14 +22,9 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     private LayoutInflater mInflater;
     private List<SearchListBean> data;
     private Context context;
-    private OnListListener mOnListListener;
-    private String userType;
-
-    public SearchListAdapter(List<SearchListBean> data, Context context, String userType, OnListListener mOnListListener) {
+    public SearchListAdapter(List<SearchListBean> data, Context context) {
         this.data = data;
         this.context = context;
-        this.mOnListListener = mOnListListener;
-        this.userType = userType;
     }
     public void setDatas(List<SearchListBean> data){
         this.data.clear();
@@ -47,18 +42,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         SearchListBean bean = data.get(i);
-        viewHolder.courseName.setText("课程名称："+bean.getCourse_name());
-        viewHolder.courseTeacher.setText("任课教师："+bean.getTeacher());
-        viewHolder.courseTime.setText("时间："+bean.getTime());
-        viewHolder.addCourse.setOnClickListener(v -> mOnListListener.onButtonClick(v, data.get(i).getCourse_id()));
-        viewHolder.searchListItem.setOnClickListener(v -> mOnListListener.onItemClick(v, data.get(i).getCourse_id()));
-        if (this.userType.equals("2"))
-            viewHolder.addCourse.setVisibility(View.GONE);
-        else if (bean.getAdded() == 1) {
-            viewHolder.addCourse.setClickable(false);
-            viewHolder.addCourse.setText("已添加");
-            //viewHolder.addCourse.setBackgroundColor(context.getColor(R.color.colorSecondary));
-        }
+        viewHolder.bigTime.setText("yyyy-mm-dd");
+        viewHolder.Time.setText("hh:mm:ss");
+        viewHolder.attend.setText("50");
+
+        //viewHolder.searchListItem.setOnClickListener(v -> mOnListListener.onItemClick(v, data.get(i).getCourse_id()));
     }
 
     @Override
@@ -74,14 +62,12 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
     static
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.course_name)
-        TextView courseName;
-        @BindView(R.id.course_teacher)
-        TextView courseTeacher;
-        @BindView(R.id.course_time)
-        TextView courseTime;
-        @BindView(R.id.add_course)
-        Button addCourse;
+        @BindView(R.id.bigTime)
+        TextView bigTime;
+        @BindView(R.id.Time)
+        TextView Time;
+        @BindView(R.id.attend)
+        TextView attend;
         @BindView(R.id.search_list_item)
         RelativeLayout searchListItem;
 

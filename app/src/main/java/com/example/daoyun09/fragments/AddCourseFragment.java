@@ -26,7 +26,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.daoyun09.activities.MainActivity;
 import com.example.daoyun09.httpBean.DefaultResultBean;
 import com.example.daoyun09.httpBean.SearchListBean;
 import com.example.daoyun09.R;
@@ -64,7 +66,7 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
     Unbinder unbinder;
 
     String searchString = "";
-    @BindView(R.id.recycle_view)
+    @BindView(R.id.atten_recycle_view)
     RecyclerView recycleView;
     @BindView(R.id.refresh_view)
     SwipeRefreshLayout refreshView;
@@ -104,9 +106,47 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
     }
 
     @OnClick(R.id.join)
+    public void Judge()
+    {
+        //获取课程相关信息
+        HttpUtil.getCourseInfo(classId.getText().toString(), new BaseObserver<JSONObject>() {
+            @Override
+            protected void onSuccess(JSONObject res) {
+
+                if(res.getString("msg").toString().equals("不存在此班课"))
+                {
+                    ToastUtil.showMessage(getActivity(), "不存在此班课,请重新输入", ToastUtil.LENGTH_LONG);
+                }
+                else
+                {
+                    JSONArray info = res.getJSONArray("dataList");
+                    JSONObject tmp = info.getJSONObject(0);
+                    if(tmp.getIntValue("isJoin") == 0) //表示不允许加入
+                    {
+                        ToastUtil.showMessage(getActivity(), "该班课不允许加入", ToastUtil.LENGTH_LONG);
+                    }
+                    else if(tmp.getIntValue("isDelete") == 1)
+                    {
+                        ToastUtil.showMessage(getActivity(), "该班课已停课", ToastUtil.LENGTH_LONG);
+                    }
+                    else
+                    {
+                        onJoin();
+                    }
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+
+            }
+        });
+    }
+
+
     public void onJoin()
     {
-        HttpUtil.JoinCourse(classId.getText().toString(),"18760372609", new BaseObserver<String>() {
+        HttpUtil.JoinCourse(classId.getText().toString(),SessionKeeper.getUserInfo(getActivity()).getPhone(), new BaseObserver<String>() {
             @Override
             protected void onSuccess(String data) {
                 loadingAppendData = false;
@@ -114,10 +154,12 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
                 if(res.getString("respCode").trim().equals("1"))
                 {
                     ToastUtil.showMessage(getActivity(), "加入班课成功", ToastUtil.LENGTH_LONG);
+                    Intent intent=new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
                 }
                 else
                 {
-                    ToastUtil.showMessage(getActivity(), "班课不存在，请重新输入", ToastUtil.LENGTH_LONG);
+                    ToastUtil.showMessage(getActivity(), res.getString("respCode").trim(), ToastUtil.LENGTH_LONG);
                 }
 
             }
@@ -196,7 +238,7 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
 //        searchView.setOnQueryTextListener(this);
         refreshView.setOnRefreshListener(this::refreshData);
         refreshView.setColorSchemeColors(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
-        mAdapter = new SearchListAdapter(data, getActivity(), SessionKeeper.getUserType(getActivity()), this);
+        //mAdapter = new SearchListAdapter(data, getActivity(), SessionKeeper.getUserType(getActivity()), this);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleView.setAdapter(mAdapter);
         recycleView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -394,7 +436,15 @@ public class AddCourseFragment extends Fragment implements SearchListAdapter.OnL
 
     @OnClick(R.id.fab)
     public void onViewClicked() {
-        startActivity(new Intent(getActivity(), CreateCourseActivity.class));
+        if(SessionKeeper.getUserInfo(getActivity()).getType() == 1)
+        {
+            startActivity(new Intent(getActivity(), CreateCourseActivity.class));
+        }
+        else
+        {
+            ToastUtil.showMessage(getActivity(), "您是学生，无法创建班课", ToastUtil.LENGTH_LONG);
+        }
+
     }
 
     @Override

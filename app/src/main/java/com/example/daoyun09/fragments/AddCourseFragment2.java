@@ -63,7 +63,7 @@ public class AddCourseFragment2 extends Fragment implements SearchListAdapter.On
     Unbinder unbinder;
 
     String searchString = "";
-    @BindView(R.id.recycle_view)
+    @BindView(R.id.atten_recycle_view)
     RecyclerView recycleView;
     @BindView(R.id.refresh_view)
     SwipeRefreshLayout refreshView;
@@ -160,7 +160,7 @@ public class AddCourseFragment2 extends Fragment implements SearchListAdapter.On
         searchView.setOnQueryTextListener(this);
         refreshView.setOnRefreshListener(this::refreshData);
         refreshView.setColorSchemeColors(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
-        mAdapter = new SearchListAdapter(data, getActivity(), SessionKeeper.getUserType(getActivity()), this);
+        //mAdapter = new SearchListAdapter(data, getActivity(), SessionKeeper.getUserType(getActivity()), this);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleView.setAdapter(mAdapter);
         recycleView.setOnScrollListener(new RecyclerView.OnScrollListener() {

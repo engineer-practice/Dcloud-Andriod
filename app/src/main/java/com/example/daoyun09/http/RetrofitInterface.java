@@ -23,7 +23,9 @@ import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
@@ -66,18 +68,29 @@ public interface RetrofitInterface {
     Observable<ServerResponse<loginByPasswordVo>> httpLoginInterface(@Part("account") String account, @Part("password") String password);
 
     /**
-     * 忘记密码接口
-     *
-     * @param params
+     * 修改密码接口
      * @return
      */
     @Multipart
-    @PUT("user/password")
-    Observable<DefaultResultBean<Object>> httpForgotPwdInterface(@PartMap Map<String, String> params);
+    @POST("user/updatePassword1")
+    Observable<String> httpupdatePwdInterface(@Part("newPassword") String newPassword,@Part("oldPassword") String oldPassword,
+                                              @Part("repeatNewPassword") String repeatNewPassword,@Part("telephone") String telephone);
 
     @Multipart
-    @PUT("user/info")
-    Observable<String> httpGetUserInfoInterface(@Part("account") String account);
+    @PUT("user/info1")
+    Observable<String> httpUpdateUserInfoInterface(@Part("SchoolCode") String SchoolCode,@Part("birth") String birth,@Part("image") String image,@Part("name") String name,
+                                                   @Part("nickname") String nickname,@Part("role_id") int role_id,@Part("sex") int sex,@Part("sno") String sno,@Part("telephone") String telephone);
+
+    @GET("user/info")
+    Observable<String> httpGetUserInfoInterface(@Query("account") String account);
+
+    @GET("schools/getCode1")
+    Observable<JSONObject> httpGetSchoolInfoInterface(@Query("code") String code);
+
+    @Multipart
+    @PUT("attendence/historyAttendence")
+    Observable<JSONObject> httpGetHistoryInterface(@Part("code") String code);
+
     /**
      * 查看系统信息
      *
@@ -128,12 +141,10 @@ public interface RetrofitInterface {
     /**
      * 获取课程学生列表
      *
-     * @param token
-     * @param course_id
      * @return
      */
-    @GET("course/students")
-    Observable<StudentsListBean> httpGetStudentsListInterface(@Query("token") String token, @Query("course_id") String course_id);
+    @GET("courses/getMember")
+    Observable<JSONObject> httpGetStudentsListInterface(@Query("code") String code);
 
 
     /**
@@ -150,15 +161,18 @@ public interface RetrofitInterface {
     @GET("courses/hasJoined")
     Observable<JSONObject> httphasJoinCourseInterface(@Query("telephone") String telephone);
 
+    @GET("schools/getSchools")
+    Observable<JSONObject> httphschoolsInterface();
+
+    @GET("schools/getAcademies")
+    Observable<JSONObject> httphgetDepartmentInterface(@Query("schoolCode") String schoolCode);
+
     /**
      * 获取课程信息
-     *
-     * @param token
-     * @param course_id
      * @return
      */
-    @GET("course/info")
-    Observable<CourseInfoBean> httpGetCourseInfoInterface(@Query("token") String token, @Query("course_id") String course_id);
+    @GET("courses/courseInfo")
+    Observable<JSONObject> httpGetCourseInfoInterface(@Query("code") String code);
 
     /**
      * 修改课程信息
@@ -233,29 +247,47 @@ public interface RetrofitInterface {
     @POST("courses")
     Observable<String> httpJoinCourseInterface(@Part("code") String code, @Part("telephone") String telephone);
 
+    @Multipart
+    @HTTP(method = "DELETE", path = "courses", hasBody = true)
+    Observable<String> httpTeacher_delCourseInterface(@Part("code") String code);
+
+    @Multipart
+    @HTTP(method = "DELETE", path = "courses", hasBody = true)
+    Observable<String> httpStu_delCourseInterface(@Part("code") String code, @Part("telephone") String telephone);
+
     /**
      * 创建课程
      */
     @Multipart
     @POST("courses/CreateClass")
-    Observable<String> httpCreateCourseInterface(@Part("className") String className, @Part("examination") String examination, @Part("isSchoolLesson") int isSchoolLesson, @Part("name") String name,
+    Observable<String> httpCreateCourseInterface(@Part("className") String className, @Part("examination") String examination, @Part("isFinish") int isFinish, @Part("name") String name,
                                                  @Part("process") String process, @Part("require") String require, @Part("school") String school, @Part("telephone") String telephone, @Part("term") String term);
 
+    @Multipart
+    @PATCH("courses")
+    Observable<String> httpUpdateCourseInterface(@Part("className") String className, @Part("code") String code,@Part("examination") String examination, @Part("isFinish") int isFinish, @Part("isJoin") int isJoin,
+                                                 @Part("name") String name, @Part("process") String process, @Part("require") String require, @Part("school") String school,  @Part("term") String term);
+
+
     /**
-     * 签到
+     * 创建签到
      * @return
      */
     @Multipart
-    @POST("check/check")
-//    Observable<DefaultResultBean<Boolean>> httpCheckInterface(@PartMap Map<String, String> params, @Part MultipartBody.Part file);
-    Observable<DefaultResultBean<Boolean>> httpCheckInterface(@PartMap Map<String, String> params);
+    @POST("attendence/createAttendence")
+    Observable<Integer> httpCheckInterface(@Part("attendance_type") int attendance_type, @Part("code") String code, @Part("count") int count, @Part("end_time") String end_time,
+                                                              @Part("latitude") double latitude, @Part("longitude") double longitude, @Part("start_time") String start_time, @Part("telephone") String telephone);
+
 
     /**
-     * 开始签到
-     *
-     * @param params
+     * 学生签到
      * @return
      */
+    @Multipart
+    @PUT("attendence/checkIn")
+    Observable<String> httpStu_CheckInterface(@Part("attend_time") String attend_time, @Part("code") String code, @Part("latitude") double latitude, @Part("longitude") double longitude,  @Part("telephone") String telephone);
+
+
     @Multipart
     @POST("check/startCheck")
     Observable<DefaultResultBean<Object>> httpStartCheckInterface(@PartMap Map<String, String> params);
@@ -263,22 +295,17 @@ public interface RetrofitInterface {
     /**
      * 停止签到
      *
-     * @param params
-     * @return
      */
     @Multipart
-    @POST("check/stop")
-    Observable<DefaultResultBean<Object>> httpStopCheckInterface(@PartMap Map<String, String> params);
+    @POST("attendence/end")
+    Observable<String> httpStopCheckInterface(@Part("code") String code);
 
     /**
      * 查询是否能签到
-     *
-     * @param params
-     * @return
      */
     @Multipart
-    @POST("check/cancheck")
-    Observable<DefaultResultBean<Boolean>> httpCanCheckInterface(@PartMap Map<String, String> params);
+    @POST("attendence/isEnd")
+    Observable<String> httpCanCheckInterface(@Part("code") String code);
 
     /**
      * 获取字典内容

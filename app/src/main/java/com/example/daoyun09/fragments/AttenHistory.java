@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
@@ -28,12 +27,9 @@ import com.example.daoyun09.http.HttpUtil;
 import com.example.daoyun09.httpBean.CoursesListBean;
 import com.example.daoyun09.session.SessionKeeper;
 import com.example.daoyun09.utils.ToastUtil;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,10 +38,10 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  * to handle interaction events.
- * Use the {@link MainPage1#newInstance} factory method to
+ * Use the {@link AttenHistory#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainPage1 extends Fragment {
+public class AttenHistory extends Fragment {
     private static final int WHAT_GET_DATA_SUCCESS = 1;
     private static final int WHAT_GET_DATA_FAILED = 2;
     private static final String ARG_PARAM1 = "param1";
@@ -57,7 +53,6 @@ public class MainPage1 extends Fragment {
     @BindView(R.id.no_class_notify)
     TextView noClassNotify;
 
-
     private String mParam1;
     private String mParam2;
     private int size;
@@ -68,8 +63,8 @@ public class MainPage1 extends Fragment {
     //课程列表
     List<CoursesListBean> data = new ArrayList<>();
 
-    public static MainPage1 newInstance(String param1, String param2) {
-        MainPage1 fragment = new MainPage1();
+    public static AttenHistory newInstance(String param1, String param2) {
+        AttenHistory fragment = new AttenHistory();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

@@ -25,9 +25,28 @@
         android:orientation="vertical"
         android:divider="@drawable/divider_transparent"
         android:showDividers="middle"
+        android:layout_gravity="center"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextLabel_Primary">
+
+            <EditText
+                android:id="@+id/up_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_edit"
+                android:hint="姓名"
+                android:inputType="text"
+                android:paddingBottom="2dp"
+                android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@drawable/bg_input_cursor"
+                android:textSize="20sp" />
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -47,40 +66,25 @@
                 android:textSize="20sp" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <TextView
+            android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/TextLabel_Primary">
-
-            <EditText
-                android:id="@+id/phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_edit"
-                android:hint="手机号"
-                android:inputType="phone"
-                android:paddingBottom="2dp"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@drawable/bg_input_cursor"
-                android:textSize="20sp" />
-        </android.support.design.widget.TextInputLayout>
+            android:layout_marginTop="8dp"
+            android:text="请选择用户身份"
+            android:textColor="@color/colorPrimary" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:theme="@style/TextLabel_Primary">
 
-            <EditText
-                android:id="@+id/gender"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/spinner_type"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_edit"
-                android:hint="性别"
-                android:inputType="text"
-                android:paddingBottom="2dp"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@drawable/bg_input_cursor"
-                android:textSize="20sp" />
+                android:layout_marginTop="5dp" />
+
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -101,23 +105,51 @@
                 android:textSize="20sp" />
         </android.support.design.widget.TextInputLayout>
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="请选择学校院系"
+            android:textColor="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner_school"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spinner_depart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="请选择用户性别"
+            android:textColor="@color/colorPrimary" />
+
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/school_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/TextLabel_Primary">
 
-            <EditText
-                android:id="@+id/school"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/spinner_sex"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_edit_2"
-                android:hint="学校/单位"
-                android:inputType="text"
-                android:paddingBottom="2dp"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@drawable/bg_input_cursor"
-                android:textSize="18sp" />
+                android:layout_marginTop="5dp" />
+
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -127,30 +159,11 @@
             android:theme="@style/TextLabel_Primary">
 
             <EditText
-                android:id="@+id/department"
+                android:id="@+id/birth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_bg_edit_2"
-                android:hint="学院/部门"
-                android:inputType="text"
-                android:paddingBottom="2dp"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@drawable/bg_input_cursor"
-                android:textSize="18sp" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/profession_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel_Primary">
-
-            <EditText
-                android:id="@+id/profession"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_edit_2"
-                android:hint="专业/职位"
+                android:hint="生日"
                 android:inputType="text"
                 android:paddingBottom="2dp"
                 android:textColor="@color/colorPrimary"
@@ -168,7 +181,7 @@
         custom:textColor="@color/colorPrimary"
         custom:background="@drawable/bt_shape"
         custom:textSize="18sp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         custom:progressColor="@color/colorPrimary"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>

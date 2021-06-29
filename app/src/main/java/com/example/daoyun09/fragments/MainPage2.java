@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.daoyun09.R;
 import com.example.daoyun09.activities.CourseInfoActivity;
+import com.example.daoyun09.activities.CreateCourseActivity;
 import com.example.daoyun09.activities.LoginActivity;
 import com.example.daoyun09.adapters.CoursesListAdapter;
 import com.example.daoyun09.http.BaseObserver;
@@ -100,7 +101,7 @@ public class MainPage2 extends Fragment {
         mRefreshCourseList.setRefreshing(true);
         data.clear();
 
-        HttpUtil.hasJoinCourse("18760372609", new BaseObserver<JSONObject>() {
+        HttpUtil.hasJoinCourse(SessionKeeper.getUserInfo(getActivity()).getPhone(), new BaseObserver<JSONObject>() {
             @Override
             protected void onSuccess(JSONObject res) {
                 size=res.getIntValue("total");
@@ -134,6 +135,8 @@ public class MainPage2 extends Fragment {
         mAdapter.setOnItemClickListener((view, position) -> {
             Intent intent = new Intent(getActivity(), CourseInfoActivity.class);
             intent.putExtra("course_id", String.valueOf(data.get(position).getCourse_id()));
+            intent.putExtra("teacher", String.valueOf(data.get(position).getTeacher()));
+            intent.putExtra("type", "0");
             startActivity(intent);
         });
         mRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));

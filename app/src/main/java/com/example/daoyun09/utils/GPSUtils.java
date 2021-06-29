@@ -12,6 +12,7 @@ public class GPSUtils {
     private static String TAG = GPSUtils.class.getSimpleName();
     private static GPSUtils mInstance;
     private Context mContext;
+
     private static LocationListener mLocationListener = new LocationListener() {
 
         // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
@@ -41,7 +42,7 @@ public class GPSUtils {
     };
 
 
-    private GPSUtils(Context context) {
+    public GPSUtils(Context context) {
         this.mContext = context;
     }
 
@@ -61,6 +62,22 @@ public class GPSUtils {
         //纬度
         String latitude = String.valueOf(location.getLatitude());
         return latitude+","+longitude;
+    }
+
+    public double getLatitude()
+    {
+        if(mInstance==null) mInstance = getInstance(mContext);
+        Location location = mInstance.getLocation();
+        if(location==null) return 0;
+        return location.getLatitude();
+    }
+
+    public double getLongitude()
+    {
+        if(mInstance==null) mInstance = getInstance(mContext);
+        Location location = mInstance.getLocation();
+        if(location==null)return 0;
+        return location.getLongitude();
     }
 
     /**

@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etVerifyCode;
     @BindView(R.id.send_verify_code)
     Button sendVerifyCode;
-    @BindView(R.id.et_phone)
+    @BindView(R.id.et_old_pwd)
     EditText etPhone;
     @BindView(R.id.et_password)
     EditText etPassword;

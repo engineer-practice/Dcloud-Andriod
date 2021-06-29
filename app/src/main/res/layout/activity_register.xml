@@ -202,7 +202,7 @@
                         android:theme="@style/TextLabel_Primary">
 
                         <EditText
-                            android:id="@+id/et_phone"
+                            android:id="@+id/et_old_pwd"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/selector_bg_edit_2"

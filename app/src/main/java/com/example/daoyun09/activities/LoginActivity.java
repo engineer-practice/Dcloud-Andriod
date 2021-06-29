@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String APP_ID = "101949518";
     private UserInfo mUserInfo;
 
-    boolean typeStateStu = true;//是否学生号qq登录
+    boolean typeStateStu = true; //是否学生号qq登录
     private int requestCode;
     private int resultCode;
     private Intent data;
@@ -98,8 +98,6 @@ public class LoginActivity extends AppCompatActivity {
     private String resCode="";
     private static final String TAG = "qq";
 
-    //    @BindView(R.id.bt_switch_type)
-//    Button btSwitchType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,11 +106,21 @@ public class LoginActivity extends AppCompatActivity {
         flag = true;
         initView();
         //initData();
-        //传入参数APPID和全局Context上下文
         mTencent = Tencent.createInstance(APP_ID, LoginActivity.this.getApplicationContext());
     }
 
     private void initView() {
+        LoginBean user = new LoginBean();
+        user.setName("init");
+        user.setNick_name("init");
+        user.setGender("init");
+        user.setStu_code("init");
+        user.setPhone("init");
+        user.setType(0);  //用户类型
+        user.setSchool("init");
+        user.setAvatar("init");
+        user.setDepartment("init");
+        SessionKeeper.loginSave(LoginActivity.this, user);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("登录中....");
         progressDialog.setCancelable(false);
@@ -130,35 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public LoginBean getUserInfo(String account)
-    {
-        LoginBean user = new LoginBean();
-        HttpUtil.getUserInfo(account,new BaseObserver<String>() {
-            @Override
-            protected void onSuccess(String s) {
-                JSONObject res = JSONObject.parseObject(s);
-                user.setToken(res.getString("token"));
-                user.setUid(res.getInteger("id"));
-                user.setEmail(res.getString("email"));
-                user.setName(res.getString("name"));
-                user.setNick_name(res.getString("Nickname"));
-                user.setGender(res.getString("sex"));
-                user.setStu_code(res.getString("sno"));
-                user.setPhone(res.getString("telphone"));
 
-                user.setType(res.getInteger("type"));
-                user.setSchool(res.getString("university"));
-                user.setDepartment(res.getString("telphone"));
-            }
-
-            @Override
-            protected void onFailure(Throwable e, boolean isNetWorkError) {
-                ToastUtil.showMessage(LoginActivity.this, "获取信息失败", ToastUtil.LENGTH_LONG);
-            }
-        });
-
-        return user;
-    }
 
     @Override
     protected void onRestart() {
@@ -177,7 +157,9 @@ public class LoginActivity extends AppCompatActivity {
             if(!etUsername.getText().toString().isEmpty() && isMobileNO(etUsername.getText().toString())) //账号非空且合法
             {
                 if(etPassword.getText().toString().trim().equals(resCode)) { //验证码正确
-                    saveData(getUserInfo(etUsername.getText().toString())); //获取用户信息
+                    //saveData(getUserInfo(etUsername.getText().toString())); //获取用户信息
+                    SessionKeeper.keepUserId(LoginActivity.this, etUsername.getText().toString());
+                    SessionKeeper.keepUserPassword(LoginActivity.this, etPassword.getText().toString().length() > 20 ? etPassword.getText().toString() : md5(etPassword.getText().toString()));
                     loginSuccess();
                 }
                 else
@@ -194,10 +176,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     protected void onSuccess(ServerResponse<loginByPasswordVo> response) {
-                        ToastUtil.showMessage(LoginActivity.this, "result:"+response.getResult(), ToastUtil.LENGTH_LONG);
+                        //ToastUtil.showMessage(LoginActivity.this, "result:"+response.getResult(), ToastUtil.LENGTH_LONG);
                         if(response.getResult()) //如果返回值为true
                         {
-                            saveData(getUserInfo(etUsername.getText().toString())); //获取用户信息
+                            SessionKeeper.keepUserId(LoginActivity.this, etUsername.getText().toString());
+                            SessionKeeper.keepUserPassword(LoginActivity.this, etPassword.getText().toString().length() > 20 ? etPassword.getText().toString() : md5(etPassword.getText().toString()));
                             loginSuccess();
                         }
                         else
@@ -247,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
         {
             getCode.setVisibility(View.GONE);
             LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) etPassword.getLayoutParams();
-            linearParams.width = 650;
+            linearParams.width = 600;
             etPassword.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
             SpannableString s = new SpannableString("   请输入密码");//这里输入自己想要的提示文字
             etPassword.setHint(s);
@@ -255,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
         else
         {
             LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) etPassword.getLayoutParams();
-            linearParams.width = 350;// 控件的宽强制设成350
+            linearParams.width = 300;// 控件的宽强制设成350
             etPassword.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
             getCode.setVisibility(View.VISIBLE);
             SpannableString s = new SpannableString("   验证码");//这里输入自己想要的提示文字
@@ -325,6 +308,35 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    public LoginBean keepUserInfo()
+    {
+        LoginBean user = new LoginBean();
+        HttpUtil.getUserInfo(etUsername.getText().toString(),new BaseObserver<String>() {
+            @Override
+            protected void onSuccess(String s) {
+                //ToastUtil.showMessage(LoginActivity.this, s, ToastUtil.LENGTH_LONG);
+                JSONObject res = JSONObject.parseObject(s);
+                user.setName(res.getString("name"));
+                user.setNick_name(res.getString("nickname"));
+                user.setGender(res.getString("sex"));
+                user.setStu_code(res.getString("sno"));
+                user.setPhone(res.getString("telephone"));
+                user.setType(res.getInteger("role"));  //用户类型
+                user.setSchool(res.getString("school"));
+                user.setAvatar(res.getString("exp"));
+                user.setDepartment(res.getString("birth"));
+                SessionKeeper.loginSave(LoginActivity.this, user);
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                ToastUtil.showMessage(LoginActivity.this, "获取信息失败", ToastUtil.LENGTH_LONG);
+            }
+        });
+
+        return user;
+    }
+
     /**
      * 发送验证码后倒数的线程
      */
@@ -369,11 +381,7 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
-    private void saveData(LoginBean loginBean) {
-        String pwd = etPassword.getText().toString();
-        SessionKeeper.loginSave(LoginActivity.this, loginBean);
-        SessionKeeper.keepUserPassword(LoginActivity.this, pwd.length() > 20 ? pwd : md5(pwd));
-    }
+
 
     @OnClick(R.id.register_go)
     public void onFabClicked() {
@@ -382,6 +390,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginSuccess() {
         btGo.setClickable(true);
+        keepUserInfo();
         SessionKeeper.keepAutoLogin(this, true);
         Explode explode = new Explode();
         explode.setDuration(500);

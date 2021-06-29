@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.daoyun09.activities.FastRegisiterActivity;
+import com.example.daoyun09.activities.LoginActivity;
 import com.example.daoyun09.activities.tmpMainActivity;
 import com.example.daoyun09.http.BaseObserver;
 import com.example.daoyun09.http.HttpUtil;
@@ -58,48 +59,58 @@ public class BaseUiListener implements IUiListener {
                         String avatar = ((JSONObject) response).getString("figureurl_2");
                         String nickName = ((JSONObject) response).getString("nickname");
                         String url ="https://graph.qq.com/oauth2.0/me?access_token="+accessToken+"&unionid=1";
-                        HttpUtil.getUid(url, new BaseObserver<String>() { //获取uid
-                            @Override
-                            protected void onSuccess(String s) {
-                                String resddd = s.substring(9,s.length()-3);
-                                Toast.makeText(context,resddd , Toast.LENGTH_SHORT).show();
-                                try {
-                                    JSONObject juid = new JSONObject(resddd);
-                                    String unionid = juid.getString("unionid");
-                                    Toast.makeText(context,unionid, Toast.LENGTH_SHORT).show();
-                                    //如果第一次三方登陆，则插入数据库
-                                    HttpUtil.QQregisterUser(nickName, avatar,new BaseObserver<String>() {
-                                        @Override
-                                        protected void onSuccess(String s) {
 
-                                        }
-
-                                        @Override
-                                        protected void onFailure(Throwable e, boolean isNetWorkError) {
-
-                                        }
-                                    });
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                            @Override
-                            protected void onFailure(Throwable e, boolean isNetWorkError) {
-
-                            }
-                        });
+                        LoginBean user = new LoginBean();
+                        user.setName(nickName);
+                        user.setNick_name(nickName);
+                        user.setGender("");
+                        user.setStu_code("");
+                        user.setPhone("待关联");
+                        user.setType(0); //默认设为学生
+                        user.setSchool("");
+                        user.setAvatar("0");
+                        user.setDepartment("");
+                        SessionKeeper.loginSave(context, user);
                         loginSuccess();
+//                        HttpUtil.getUid(url, new BaseObserver<String>() { //获取uid
+//                            @Override
+//                            protected void onSuccess(String s) {
+//                                String resddd = s.substring(9,s.length()-3);
+//                                Toast.makeText(context,resddd , Toast.LENGTH_SHORT).show();
+//                                try {
+//                                    JSONObject juid = new JSONObject(resddd);
+//                                    String unionid = juid.getString("unionid");
+//                                    Toast.makeText(context,unionid, Toast.LENGTH_SHORT).show();
+//                                    //如果第一次三方登陆，则插入数据库
+//                                    HttpUtil.QQregisterUser(nickName, avatar,new BaseObserver<String>() {
+//                                        @Override
+//                                        protected void onSuccess(String s) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        protected void onFailure(Throwable e, boolean isNetWorkError) {
+//
+//                                        }
+//                                    });
+//
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            protected void onFailure(Throwable e, boolean isNetWorkError) {
+//
+//                            }
+//                        });
+//                        loginSuccess();
 
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-//                    Intent intent = new Intent(context, tmpMainActivity.class);
-//                    context.startActivity(intent);
                 }
 
                 @Override
@@ -144,8 +155,10 @@ public class BaseUiListener implements IUiListener {
     private void saveData(LoginBean loginBean) {
         SessionKeeper.loginSave(context, loginBean);
     }
+
+
+
     private void loginSuccess() {
-       // SessionKeeper.keepAutoLogin(this, true);
 
         Intent i2 = new Intent(context, MainActivity.class);
         context.startActivity(i2);

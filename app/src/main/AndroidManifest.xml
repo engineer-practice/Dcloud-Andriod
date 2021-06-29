@@ -38,6 +38,10 @@
         <activity android:name="com.example.daoyun09.activities.tmpMainActivity"/>
         <activity android:name="com.example.daoyun09.activities.FastRegisiterActivity"></activity>
         <activity android:name="com.example.daoyun09.activities.QRCode"></activity>
+        <activity android:name="com.example.daoyun09.activities.tmpCourseInfo"></activity>
+        <activity android:name="com.example.daoyun09.activities.CheckActivity"></activity>
+        <activity android:name="com.example.daoyun09.activities.Check_Stu_Activity"></activity>
+        <activity android:name="com.example.daoyun09.activities.AttendActivity"></activity>
         <activity
             android:name="com.example.daoyun09.activities.RegisterActivity"
             android:theme="@style/Translucent" />

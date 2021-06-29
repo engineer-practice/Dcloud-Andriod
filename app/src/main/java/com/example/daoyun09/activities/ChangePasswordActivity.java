@@ -1,11 +1,13 @@
 package com.example.daoyun09.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
@@ -17,7 +19,7 @@ import com.example.daoyun09.httpBean.DefaultResultBean;
 import com.example.daoyun09.R;
 import com.example.daoyun09.http.BaseObserver;
 import com.example.daoyun09.http.HttpUtil;
-import com.example.daoyun09.utils.LogUtil;
+import com.example.daoyun09.session.SessionKeeper;
 import com.example.daoyun09.utils.ToastUtil;
 import com.example.daoyun09.utils.Util;
 
@@ -40,30 +42,21 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private static final int WHAT_HIDE_LOADING = 1007;
     private static final int WHAT_BACK = 1008;
 
-    @BindView(R.id.forget_password_back)
-    Button forgetPasswordBack;
-    @BindView(R.id.et_email)
-    EditText etEmail;
-    @BindView(R.id.et_verify_code)
-    EditText etVerifyCode;
-    @BindView(R.id.send_verify_code)
-    Button sendVerifyCode;
+    @BindView(R.id.updatepwd_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.et_phone)
+    EditText etPhone;
+    @BindView(R.id.et_old_pwd)
+    EditText etOldPwd;
     @BindView(R.id.et_new_pwd)
     EditText etNewPwd;
     @BindView(R.id.et_repeat_password)
     EditText etRepeatPassword;
     @BindView(R.id.loading_button)
     LoadingButton loadingButton;
-    @BindView(R.id.text_input_email)
-    TextInputLayout textInputEmail;
-    @BindView(R.id.text_input_verify_code)
-    TextInputLayout textInputVerifyCode;
-    @BindView(R.id.text_input_new_pwd)
-    TextInputLayout textInputNewPwd;
-    @BindView(R.id.text_input_repeat_pwd)
-    TextInputLayout textInputRepeatPwd;
 
     Thread sendCodeThread;
+    private String resCode="";
     int count = 60;
 
 
@@ -72,111 +65,27 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         ButterKnife.bind(this);
+        etPhone.setText(SessionKeeper.getUserInfo(ChangePasswordActivity.this).getPhone());
+        toolbar.setNavigationOnClickListener(v -> onBackPressed()); //设置返回按键
         setListener();
-    }
-
-
-    @OnClick(R.id.forget_password_back)
-    public void onForgetPasswordBackClicked() {
-        onBackPressed();
-    }
-
-    @OnClick(R.id.send_verify_code)
-    public void onSendVerifyCodeClicked() {
-        if (!etEmail.getText().toString().isEmpty() && etEmail.getError() == null){
-            sendEmail(etEmail.getText().toString());
-            mHandler.sendEmptyMessage(WHAT_SEND_EMAIL);
-        }
     }
 
     @OnClick(R.id.loading_button)
     public void onLoadingButtonClicked() {
-        if (!loadingButton.isLoading()) {
-            loadingButton.showLoading();
-            if (checkInput())
-                changePassword();
-            else {
-                loadingButton.showError();
-                mHandler.sendEmptyMessageDelayed(WHAT_HIDE_LOADING, 1000);
-            }
-        }
-    }
-
-//    private void sendEmail(String email) throws JSONException {
-//        JSONObject je = new JSONObject();
-//        je.put("email",email);
-//        HttpUtil.sendEmail(je, new BaseObserver<DefaultResultBean<Object>>() {
-//            @Override
-//            protected void onSuccess(DefaultResultBean<Object> objectDefaultResultBean) {
-//                if (objectDefaultResultBean.getResult_code().equals("200")) {
-//                    ToastUtil.showMessage(ChangePasswordActivity.this, "发送成功", ToastUtil.LENGTH_LONG);
-//                } else {
-//                    mHandler.sendEmptyMessage(WHAT_CAN_RESEND);
-//                    ToastUtil.showMessage(ChangePasswordActivity.this, objectDefaultResultBean.getResult_desc(), ToastUtil.LENGTH_LONG);
-//                }
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable e, boolean isNetWorkError) {
-//                mHandler.sendEmptyMessage(WHAT_CAN_RESEND);
-//                LogUtil.e("send email", "send email error", e);
-//                if (isNetWorkError)
-//                    ToastUtil.showMessage(ChangePasswordActivity.this, "请求失败，请检查网络", ToastUtil.LENGTH_SHORT);
-//                else
-//                    ToastUtil.showMessage(ChangePasswordActivity.this, "发送失败", ToastUtil.LENGTH_SHORT);
-//            }
-//        });
-//    }
-
-private void sendEmail(String email) {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("email",email);
-    JSONObject EM = new JSONObject(map);
-    HttpUtil.sendEmail(email, new BaseObserver<String>() {
-        @Override
-        protected void onSuccess(String objectDefaultResultBean) {
-            if (objectDefaultResultBean.equals("200")) {
-                ToastUtil.showMessage(ChangePasswordActivity.this, "发送成功", ToastUtil.LENGTH_LONG);
-            } else {
-                mHandler.sendEmptyMessage(WHAT_CAN_RESEND);
-                ToastUtil.showMessage(ChangePasswordActivity.this, objectDefaultResultBean, ToastUtil.LENGTH_LONG);
-            }
-        }
-
-        @Override
-        protected void onFailure(Throwable e, boolean isNetWorkError) {
-            mHandler.sendEmptyMessage(WHAT_CAN_RESEND);
-            LogUtil.e("send email", "send email error", e);
-            if (isNetWorkError)
-                ToastUtil.showMessage(ChangePasswordActivity.this, "请求失败，请检查网络", ToastUtil.LENGTH_SHORT);
-            else
-                ToastUtil.showMessage(ChangePasswordActivity.this, "发送失败", ToastUtil.LENGTH_SHORT);
-        }
-    });
-}
-
-    private boolean checkInput() {
-        if (textInputEmail.getError() != null) return false;
-        if (textInputNewPwd.getError() != null)
-            return false;
-        return textInputRepeatPwd.getError() == null;
-    }
-
-    private void changePassword() {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", etEmail.getText().toString());
-        params.put("email_code", etVerifyCode.getText().toString());
-        params.put("new_pwd", Util.md5(etRepeatPassword.getText().toString()));
-        HttpUtil.forgotPwd(params, new BaseObserver<DefaultResultBean<Object>>() {
+        HttpUtil.updatePwd(etNewPwd.getText().toString(),etOldPwd.getText().toString(),etRepeatPassword.getText().toString(),etPhone.getText().toString(), new BaseObserver<String>() {
             @Override
-            protected void onSuccess(DefaultResultBean<Object> objectDefaultResultBean) {
-                if (objectDefaultResultBean.getResult_code().equals("200")) {
-                    mHandler.sendEmptyMessage(WHAT_OPERATION_SUCCESS);
-                } else {
-                    Message msg = new Message();
-                    msg.what = WHAT_OPERATION_FAIL;
-                    msg.obj = objectDefaultResultBean.getResult_desc();
-                    mHandler.sendMessage(msg);
+            protected void onSuccess(String response) {
+                JSONObject res =JSONObject.parseObject(response);
+                String resCode = ((String)res.get("respCode")).trim();
+                if(resCode.equals("1"))
+                {
+                    ToastUtil.showMessage(ChangePasswordActivity.this, "密码修改成功");
+                    Intent intent=new Intent(ChangePasswordActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    ToastUtil.showMessage(ChangePasswordActivity.this, resCode);
                 }
             }
 
@@ -194,6 +103,26 @@ private void sendEmail(String email) {
         });
     }
 
+    private void sendEmail(String phone) {
+
+        HttpUtil.sendTelCode(phone, new BaseObserver<String>() {
+            @Override
+            protected void onSuccess(String response) {
+                //ToastUtil.showMessage(LoginActivity.this, response, ToastUtil.LENGTH_LONG);
+                JSONObject res =JSONObject.parseObject(response);
+                resCode = ((String)res.get("respCode")).trim(); //将获取回来的验证码值存到resCode
+                //ToastUtil.showMessage(LoginActivity.this, resCode, ToastUtil.LENGTH_LONG);
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+
+            }
+        });
+
+    }
+
+
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
         @Override
@@ -202,20 +131,20 @@ private void sendEmail(String email) {
             switch (msg.what) {
                 //点击发送验证码后 按钮文字改为提示多久可再次发送
                 case WHAT_SEND_EMAIL:
-                    sendVerifyCode.setClickable(false);
+                    //sendVerifyCode.setClickable(false);
                     sendCodeThread = new Thread(canSendCode);
                     sendCodeThread.start();
                     break;
                 //设置为可再发送
                 case WHAT_CAN_RESEND:
                     count = 60;
-                    sendVerifyCode.setText("发送验证码");
-                    sendVerifyCode.setClickable(true);
+                    //sendVerifyCode.setText("发送验证码");
+                    //sendVerifyCode.setClickable(true);
                     break;
                 //设置倒数时间
                 case WHAT_SET_TIME:
                     String s = count + "秒";
-                    sendVerifyCode.setText(s);
+                    //sendVerifyCode.setText(s);
                     count--;
                     break;
                 case WHAT_OPERATION_SUCCESS:
@@ -265,7 +194,7 @@ private void sendEmail(String email) {
     }
 
     private void setListener() {
-        etEmail.addTextChangedListener(new TextWatcher() {
+        etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -279,13 +208,7 @@ private void sendEmail(String email) {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!s.toString().equals("")) {
-                    if (!Pattern.matches(Util.Email_Reg, s.toString())) {
-                        textInputEmail.setErrorEnabled(true);
-                        textInputEmail.setError("邮箱格式不正确");
-                    } else {
-                        textInputEmail.setErrorEnabled(false);
-                        textInputEmail.setError(null);
-                    }
+
                 }
             }
         });
@@ -303,13 +226,7 @@ private void sendEmail(String email) {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!s.toString().equals("")) {
-                    if (!Pattern.matches(Util.Password_Reg, s.toString())) {
-                        textInputNewPwd.setErrorEnabled(true);
-                        textInputNewPwd.setError(Util.Password_Rule);
-                    } else {
-                        textInputNewPwd.setErrorEnabled(false);
-                        textInputNewPwd.setError(null);
-                    }
+
                 }
             }
         });
@@ -327,30 +244,7 @@ private void sendEmail(String email) {
 
             @Override
             public void afterTextChanged(Editable s) {
-                boolean hasError = false;
-                if (!s.toString().equals("")) {
-                    if (!Pattern.matches(Util.Password_Reg, s.toString())) {
-                        textInputRepeatPwd.setErrorEnabled(true);
-                        textInputRepeatPwd.setError(Util.Password_Rule);
-                        hasError = true;
-                    } else {
-                        textInputRepeatPwd.setError(null);
-                        hasError = false;
-                    }
-                    if (!s.toString().equals(etNewPwd.getText().toString())) {
-                        String pwd_str = String.valueOf(textInputRepeatPwd.getError());
-                        textInputRepeatPwd.setError((!hasError ? "" : pwd_str + "\n") + "两次输入的密码不同");
-                        hasError = true;
-                    } else {
-                        //两次密码正确
-                        String e = String.valueOf(textInputRepeatPwd.getError()).split("\n")[0];
-                        if (hasError)
-                            textInputRepeatPwd.setError(e);
-                    }
-                    textInputRepeatPwd.setErrorEnabled(hasError);
-                    if (!hasError)
-                        textInputRepeatPwd.setError(null);
-                }
+
             }
         });
     }
